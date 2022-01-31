@@ -5,6 +5,7 @@ var
 node_modules/
 npm-debug.log*
 package-lock.json
+db.sqlite3
 
 # Mac OS X
 .DS_Store
