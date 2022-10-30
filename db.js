@@ -2,11 +2,12 @@ var sqlite3 = require('sqlite3');
 var mkdirp = require('mkdirp');
 var crypto = require('crypto');
 
-mkdirp.sync('./var/db');
+const dbdir = `${__dirname}/var/db`
+mkdirp.sync(dbdir);
 
-var db = new sqlite3.Database('./var/db/todos.db');
+var db = new sqlite3.Database(`${dbdir}/todos.db`);
 
-db.serialize(function() {
+db.serialize(function () {
   // create the database schema for the todos app
   db.run("CREATE TABLE IF NOT EXISTS users ( \
     id INTEGER PRIMARY KEY, \
@@ -14,14 +15,14 @@ db.serialize(function() {
     hashed_password BLOB, \
     salt BLOB \
   )");
-  
+
   db.run("CREATE TABLE IF NOT EXISTS todos ( \
     id INTEGER PRIMARY KEY, \
     owner_id INTEGER NOT NULL, \
     title TEXT NOT NULL, \
     completed INTEGER \
   )");
-  
+
   // create an initial user (username: alice, password: letmein)
   var salt = crypto.randomBytes(16);
   db.run('INSERT OR IGNORE INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
